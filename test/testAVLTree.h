@@ -1,0 +1,8 @@
+//
+// Created by basti on 12/6/17.
+//
+
+#ifndef BLATT_7_AUFGABE_1_SBEM_TESTAVLTREE_H
+#define BLATT_7_AUFGABE_1_SBEM_TESTAVLTREE_H
+
+#endif //BLATT_7_AUFGABE_1_SBEM_TESTAVLTREE_H
