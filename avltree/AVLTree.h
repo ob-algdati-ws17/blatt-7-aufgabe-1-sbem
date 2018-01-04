@@ -1,6 +1,6 @@
-//
-// Created by basti on 12/6/17.
-//
+/**
+ * @authors Ehsan Moslehi, Sebastian Bauman
+ */
 
 #ifndef BLATT_7_AUFGABE_1_SBEM_AVLTREE_H
 #define BLATT_7_AUFGABE_1_SBEM_AVLTREE_H
@@ -23,6 +23,7 @@ private:
         Node(const int);
         Node(const int, Node *, Node*);
         ~Node();
+        bool search(const int) const;
         vector<int> *preorder() const;
         vector<int> *inorder() const;
         vector<int> *postorder() const;
