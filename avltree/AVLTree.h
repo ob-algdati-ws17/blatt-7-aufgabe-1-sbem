@@ -24,9 +24,9 @@ private:
         Node(const int, Node *, Node*);
         ~Node();
         bool search(const int) const;
-        vector<int> *preorder() const;
-        vector<int> *inorder() const;
-        vector<int> *postorder() const;
+        vector<int> *preorder() const;  // Hauptreihenfolge (© Prof. Dr. Oliver Braun)
+        vector<int> *inorder() const;   // Symmetrische Reihenfolge (© Prof. Dr. Oliver Braun)
+        vector<int> *postorder() const; // Nebenreihenfolge (© Prof. Dr. Oliver Braun)
     };
 
     Node *root = nullptr;
@@ -72,9 +72,9 @@ public:
      */
     void remove(const int);
 
-    vector<int> *preorder() const;
-    vector<int> *inorder() const;
-    vector<int> *postorder() const;
+    vector<int> *preorder() const;      // Hauptreihenfolge (© Prof. Dr. Oliver Braun)
+    vector<int> *inorder() const;       // Symmetrische Reihenfolge (© Prof. Dr. Oliver Braun)
+    vector<int> *postorder() const;     // Nebenreihenfolge (© Prof. Dr. Oliver Braun)
 
     friend ostream &operator<<(ostream &, const AVLTree &);
 
