@@ -31,54 +31,6 @@ private:
 
     Node *root = nullptr;
 
-public:
-
-    ~AVLTree();
-
-    // Funktioniert exakt, wie in natuerlichem Baum -> Siehe BinTree
-    bool search(const int) const;
-
-    /*
-     * Funktioniert wie in BinTree
-     * ABER: Pruefung, ob AVL-Bedingung noch gilt! (Ueberpruefe bal auf Pfad von Einfuegestelle bis zur Wurzel)
-     * Ist AVL-Bedingung nicht erfuellt: Rotation oder Doppelrotation
-     *
-     * - Einfuegen in leeren Baum: -> wie BinTree, nichts besonderes
-     * - Einfuegen von x mit Vorgaenger:
-     *   * Fall 1:
-     *     + bal(p) = 1 (-> rechter Ast von p ist um 1 hoeher als linker Ast)
-     *     + wird nun x auf linkem Ast von p eingefuegt, so wird bal(p) == 0
-     *   * Fall 2:
-     *     + bal(p) = -1 (-> linker Ast von p ist um 1 hoeher als rechter Ast)
-     *     + wird nun x auf rechtem Ast von p eingefuegt, so wird bal(p) == 0
-     *   * Fall 3:
-     *     + bal(p) = 0 (-> linker und rechter Ast von p sind gleich hoch)
-     *     + wird x am linken Ast von p eingefuegt, so wird bal(p) == -1, sonst 1
-     *     + Immer: Aufruf von upin(p)
-     *
-     * Wenn sich bal von p geaendert hat, haben sich eventuell auch andere bal auf dem Pfad von p zur Wurzel
-     * geaendert. Daher muss upin(p) aufgerufen werden, das von p auf Pfad bis zur Wurzel laeuft und bal
-     * anpasst.
-     */
-    void insert(const int);
-
-    /*
-     * 1.) Suche nach Knoten p mit entsprechendem Schluessel
-     *     => Knoten p nicht gefunden -> fertig
-     * 2.) Knoten p mit entsprechenden Schluessel gefunden:
-     *     * Fall 2.1: beide Nachfolger sind Blaetter
-     *     * Fall 2.2: Ein Nachfolger ist innerer Knoten und einer ist Blatt
-     *     * Fall 2.3: Beide Nachfolger sind innere Knoten
-     */
-    void remove(const int);
-
-    vector<int> *preorder() const;
-    vector<int> *inorder() const;
-    vector<int> *postorder() const;
-
-    friend ostream &operator<<(ostream &, const AVLTree &);
-
-
     // ---------------------------------------------------------------------------------------
 
     /*
@@ -129,12 +81,61 @@ public:
      * Fall 2.3.1 -> Rotation nach links, ansonsten analog zu "p ist linker Nachfolger von yp"
      * Fall 2.3.2 -> Doppelrotation nach rechts-links, ansonsten analog zu "p ist linker Nachfolger von yp"
      */
-    void upin(const int);
+    void upin(Node*);
 
     //
     void upout(const int);
 
+    void insert(const int, Node*);
+
     // ---------------------------------------------------------------------------------------
+
+
+public:
+
+    ~AVLTree();
+
+    // Funktioniert exakt, wie in natuerlichem Baum -> Siehe BinTree
+    bool search(const int) const;
+
+    /*
+     * Funktioniert wie in BinTree
+     * ABER: Pruefung, ob AVL-Bedingung noch gilt! (Ueberpruefe bal auf Pfad von Einfuegestelle bis zur Wurzel)
+     * Ist AVL-Bedingung nicht erfuellt: Rotation oder Doppelrotation
+     *
+     * - Einfuegen in leeren Baum: -> wie BinTree, nichts besonderes
+     * - Einfuegen von x mit Vorgaenger:
+     *   * Fall 1:
+     *     + bal(p) = 1 (-> rechter Ast von p ist um 1 hoeher als linker Ast)
+     *     + wird nun x auf linkem Ast von p eingefuegt, so wird bal(p) == 0
+     *   * Fall 2:
+     *     + bal(p) = -1 (-> linker Ast von p ist um 1 hoeher als rechter Ast)
+     *     + wird nun x auf rechtem Ast von p eingefuegt, so wird bal(p) == 0
+     *   * Fall 3:
+     *     + bal(p) = 0 (-> linker und rechter Ast von p sind gleich hoch)
+     *     + wird x am linken Ast von p eingefuegt, so wird bal(p) == -1, sonst 1
+     *     + Immer: Aufruf von upin(p)
+     *
+     * Wenn sich bal von p geaendert hat, haben sich eventuell auch andere bal auf dem Pfad von p zur Wurzel
+     * geaendert. Daher muss upin(p) aufgerufen werden, das von p auf Pfad bis zur Wurzel laeuft und bal
+     * anpasst.
+     */
+    void insert(const int);
+    /*
+     * 1.) Suche nach Knoten p mit entsprechendem Schluessel
+     *     => Knoten p nicht gefunden -> fertig
+     * 2.) Knoten p mit entsprechenden Schluessel gefunden:
+     *     * Fall 2.1: beide Nachfolger sind Blaetter
+     *     * Fall 2.2: Ein Nachfolger ist innerer Knoten und einer ist Blatt
+     *     * Fall 2.3: Beide Nachfolger sind innere Knoten
+     */
+    void remove(const int);
+
+    vector<int> *preorder() const;
+    vector<int> *inorder() const;
+    vector<int> *postorder() const;
+
+    friend ostream &operator<<(ostream &, const AVLTree &);
 
 };
 

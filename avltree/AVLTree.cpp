@@ -30,3 +30,34 @@ bool AVLTree::Node::search(const int value) const {
     }
     return false;
 }
+
+void AVLTree::insert(int value) {
+    if (root == nullptr) {
+        root = new Node(value);
+    }
+    else {
+        insert(value, root);
+    }
+}
+
+void AVLTree::insert(int value, Node *node) {
+    if (value != node->key) {
+        if (value < node->key) {
+            if (node->left == nullptr) {
+                node->left = new Node(value);
+            }
+            else {
+                insert(value, node->left);
+            }
+        }
+        else {
+            if (node->right == nullptr) {
+                node->right = new Node(value);
+            }
+            else {
+                insert(value, node->right);
+            }
+        }
+        upin(node);
+    }
+}
