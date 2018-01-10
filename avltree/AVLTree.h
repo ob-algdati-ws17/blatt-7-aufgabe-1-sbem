@@ -39,12 +39,57 @@ private:
      * Aufgabe BinTree (Blatt 6) umgesetzt worden und deshalb neu.
      */
 
-    // Hier die beiden rotate-Methoden, die die Hoehendifferenz ausgleichen sollen
-    // Achtung: im Skript heißt es, es gibt eine "Rotation nach links" und eine
-    // "Doppelrotation rechts links". Eventuell muessen wir als Rotationen fuer
-    // diverse Richtungen umsetzen.
-    void rotate();
-    void rotatetwice();
+    // Hier die vier rotate-Methoden, die die Hoehendifferenz ausgleichen sollen
+
+    /*
+     * \brief Method rotates a tree or a section tree one step to the left.
+     *
+     * This method rotates a whole tree or just a section of a tree by one step to the left. In other
+     * words this method performs a single rotation to the left. As the only parameter this method
+     * needs a pointer to the root node of the tree it should rotate.
+     *
+     * @param n a Node argument
+     * @return the new root node of the rotated tree
+     */
+    Node *rotateLeft(Node *n);
+
+    /*
+     * \brief Method rotates a tree or a section tree one step to the right.
+     *
+     * This method rotates a whole tree or just a section of a tree by one step to the right. In other
+     * words this method performs a single rotation to the right. As the only parameter this method
+     * needs a pointer to the root node of the tree it should rotate.
+     *
+     * @param n a Node argument
+     * @return the new root node of the rotated tree
+     */
+    Node *rotateRight(Node *n);
+
+    /*
+     * \brief Method double rotates a tree or a section tree to the left and then to the right.
+     *
+     * This method rotates a whole tree or just a section of a tree by two steps: the first one to
+     * the left and the second one to the right. In other words this method performs a double rotation
+     * left-right. As the only parameter this method needs a pointer to the root node of the tree it
+     * should rotate.
+     *
+     * @param n a Node argument
+     * @return the new root node of the rotated tree
+     */
+    Node *rotateLeftRight(Node *n);
+
+    /*
+     * \brief Method double rotates a tree or a section tree to the right and then to the left.
+     *
+     * This method rotates a whole tree or just a section of a tree by two steps: the first one to
+     * the right and the second one to the left. In other words this method performs a double rotation
+     * right-left. As the only parameter this method needs a pointer to the root node of the tree it
+     * should rotate.
+     *
+     * @param n a Node argument
+     * @return the new root node of the rotated tree
+     */
+    Node *rotateRightLeft(Node *n);
 
     /*
      * Methode upin(p) laeuft den Pfad von Knoten p zurueck zu Wurzel und passt Balance-Faktor bal an.
