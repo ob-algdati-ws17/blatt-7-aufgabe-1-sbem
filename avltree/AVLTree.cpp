@@ -7,10 +7,32 @@
 
 using namespace ::std;
 
-AVLTree::Node::Node(const int k) : key(k), bal(0) {}
+AVLTree::Node::Node(const int k) : key(k) {}
 
-AVLTree::Node::Node(const int k, Node *l, Node *r)
-        : key(k), left(l), right(r), bal(0) {}
+AVLTree::Node::Node(const int k,Node *p)
+        : key(k), prev(p) {}
+
+AVLTree::Node::Node(const int k,Node *p, Node *l, Node *r)
+        : key(k), prev(p), left(l), right(r) {}
+
+
+/********************************************************************
+ * Destructors
+ *******************************************************************/
+
+AVLTree::Node::~Node(){
+    delete left;
+    delete right;
+}
+
+AVLTree::~AVLTree(){
+    delete root;
+}
+
+
+/********************************************************************
+ * search, insert and remove
+ *******************************************************************/
 
 bool AVLTree::search(const int value) const {
     if (root == nullptr) {
@@ -35,8 +57,7 @@ bool AVLTree::Node::search(const int value) const {
 void AVLTree::insert(int value) {
     if (root == nullptr) {
         root = new Node(value);
-    }
-    else {
+    } else {
         insert(value, root);
     }
 }
@@ -46,20 +67,25 @@ void AVLTree::insert(int value, Node *node) {
         if (value < node->key) {
             if (node->left == nullptr) {
                 node->left = new Node(value);
-            }
-            else {
+            } else {
                 insert(value, node->left);
             }
-        }
-        else {
+        } else {
             if (node->right == nullptr) {
                 node->right = new Node(value);
-            }
-            else {
+            } else {
                 insert(value, node->right);
             }
         }
         upin(node);
+    }
+}
+
+void AVLTree::remove(const int key) {
+    if(!search(key)) {
+        return;
+    } else {
+
     }
 }
 
@@ -92,6 +118,10 @@ AVLTree::Node *AVLTree::rotateLeftRight(Node *n) {
 AVLTree::Node *AVLTree::rotateRightLeft(Node *n) {
     n->right = rotateRight(n->right);
     return rotateLeft(n);
+}
+
+void AVLTree::upin(Node *node) {
+
 }
 
 /********************************************************************

@@ -17,11 +17,13 @@ private:
         const int key;  // Vorgabe: nur ints als Schluessel
         // Balancefaktor für einen Knoten. Wird aktualisiert bei Aenderungen an Baumstruktur. bal e [-1,1].
         // Hoehe rechter Teilbaum - Hoehe linker Teilbaum.
-        int bal;
+        signed char bal = 0;
         Node *left = nullptr;
         Node *right = nullptr;
+        Node *prev = nullptr;
         Node(const int);
-        Node(const int, Node *, Node*);
+        Node(const int, Node *);
+        Node(const int, Node *, Node *, Node*);
         ~Node();
         bool search(const int) const;
         vector<int> *preorder() const;  // Hauptreihenfolge (© Prof. Dr. Oliver Braun)
@@ -169,8 +171,16 @@ public:
     /*
      * 1.) Suche nach Knoten p mit entsprechendem Schluessel
      *     => Knoten p nicht gefunden -> fertig
-     * 2.) Knoten p mit entsprechenden Schluessel gefunden:
+     * 2.) Knoten p mit entsprechendem Schluessel gefunden:
      *     * Fall 2.1: beide Nachfolger sind Blaetter
+     *       - ersetzen des Knotens durch ein Blatt (nullptr)
+     *       - vp ist Vorgänger von p
+     *       - der andere Teilbaum q von vp kann nur eine Höhe von 0, 1 oder 2 haben
+     *       2.1.1: q hat Höhe 0:
+     *         -> bal(p) war 1 und wird zu 0
+     *         -> aufruf upout(p) auf Suchpfad zur Wurzel
+     *       2.1.2: q hat Höhe von 1:
+     *         -> bal(p) war 0 und wird zu -1
      *     * Fall 2.2: Ein Nachfolger ist innerer Knoten und einer ist Blatt
      *     * Fall 2.3: Beide Nachfolger sind innere Knoten
      */
