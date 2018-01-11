@@ -63,10 +63,16 @@ void AVLTree::insert(int value, Node *node) {
     }
 }
 
+
+/********************************************************************
+ * Rotations
+ *******************************************************************/
+
 AVLTree::Node *AVLTree::rotateLeft(Node *n) {
     Node *oldRoot = n;
     Node *newRoot = oldRoot->right;
     oldRoot->right = newRoot->left;
+    newRoot->left = oldRoot;
     return newRoot;
 }
 
@@ -74,15 +80,18 @@ AVLTree::Node *AVLTree::rotateRight(Node *n) {
     Node *oldRoot = n;
     Node *newRoot = oldRoot->left;
     oldRoot->left = newRoot->right;
+    newRoot->right = oldRoot;
     return newRoot;
 }
 
 AVLTree::Node *AVLTree::rotateLeftRight(Node *n) {
-    // TODO: implement method rotateLeftRight
+    n->left = rotateLeft(n->left);
+    return rotateRight(n);
 }
 
 AVLTree::Node *AVLTree::rotateRightLeft(Node *n) {
-    // TODO: implement method rotateRightLeft
+    n->right = rotateRight(n->right);
+    return rotateLeft(n);
 }
 
 /********************************************************************
