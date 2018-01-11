@@ -17,11 +17,13 @@ private:
         const int key;  // Vorgabe: nur ints als Schluessel
         // Balancefaktor für einen Knoten. Wird aktualisiert bei Aenderungen an Baumstruktur. bal e [-1,1].
         // Hoehe rechter Teilbaum - Hoehe linker Teilbaum.
-        int bal;
+        signed char bal = 0;
         Node *left = nullptr;
         Node *right = nullptr;
+        Node *prev = nullptr;
         Node(const int);
-        Node(const int, Node *, Node*);
+        Node(const int, Node *);
+        Node(const int, Node *, Node *, Node*);
         ~Node();
         bool search(const int) const;
         vector<int> *preorder() const;  // Hauptreihenfolge (© Prof. Dr. Oliver Braun)

@@ -7,10 +7,13 @@
 
 using namespace ::std;
 
-AVLTree::Node::Node(const int k) : key(k), bal(0) {}
+AVLTree::Node::Node(const int k) : key(k) {}
 
-AVLTree::Node::Node(const int k, Node *l, Node *r)
-        : key(k), left(l), right(r), bal(0) {}
+AVLTree::Node::Node(const int k,Node *p)
+        : key(k), prev(p) {}
+
+AVLTree::Node::Node(const int k,Node *p, Node *l, Node *r)
+        : key(k), prev(p), left(l), right(r) {}
 
 bool AVLTree::search(const int value) const {
     if (root == nullptr) {
@@ -35,8 +38,7 @@ bool AVLTree::Node::search(const int value) const {
 void AVLTree::insert(int value) {
     if (root == nullptr) {
         root = new Node(value);
-    }
-    else {
+    } else {
         insert(value, root);
     }
 }
@@ -46,21 +48,53 @@ void AVLTree::insert(int value, Node *node) {
         if (value < node->key) {
             if (node->left == nullptr) {
                 node->left = new Node(value);
-            }
-            else {
+            } else {
                 insert(value, node->left);
             }
-        }
-        else {
+        } else {
             if (node->right == nullptr) {
                 node->right = new Node(value);
-            }
-            else {
+            } else {
                 insert(value, node->right);
             }
         }
         upin(node);
     }
+}
+
+
+/********************************************************************
+ * Rotations
+ *******************************************************************/
+
+AVLTree::Node *AVLTree::rotateLeft(Node *n) {
+    Node *oldRoot = n;
+    Node *newRoot = oldRoot->right;
+    oldRoot->right = newRoot->left;
+    newRoot->left = oldRoot;
+    return newRoot;
+}
+
+AVLTree::Node *AVLTree::rotateRight(Node *n) {
+    Node *oldRoot = n;
+    Node *newRoot = oldRoot->left;
+    oldRoot->left = newRoot->right;
+    newRoot->right = oldRoot;
+    return newRoot;
+}
+
+AVLTree::Node *AVLTree::rotateLeftRight(Node *n) {
+    n->left = rotateLeft(n->left);
+    return rotateRight(n);
+}
+
+AVLTree::Node *AVLTree::rotateRightLeft(Node *n) {
+    n->right = rotateRight(n->right);
+    return rotateLeft(n);
+}
+
+void AVLTree::upin(Node *node) {
+
 }
 
 /********************************************************************
