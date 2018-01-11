@@ -60,13 +60,18 @@ void AVLTree::insert(int value) {
 
 void AVLTree::insert(int value, Node *node) {
     if (value < node->key) {
-        node->left = new Node(value);
+        node->left = new Node(value, node);
+        node->bal -= 1;
     } else {
-        node->right = new Node(value);
+        node->right = new Node(value, node);
+        node->bal += 1;
     }
     upin(node);
 }
 
+void AVLTree::upin(Node *node) {
+
+}
 
 /********************************************************************
  * Rotations
@@ -96,10 +101,6 @@ AVLTree::Node *AVLTree::rotateLeftRight(Node *n) {
 AVLTree::Node *AVLTree::rotateRightLeft(Node *n) {
     n->right = rotateRight(n->right);
     return rotateLeft(n);
-}
-
-void AVLTree::upin(Node *node) {
-
 }
 
 /********************************************************************
