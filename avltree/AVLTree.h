@@ -2,6 +2,11 @@
  * @authors Ehsan Moslehi, Sebastian Bauman
  */
 
+/* TODO: upin(), upout(), remove(), googletests,
+ * öffentliches Interface mit Doxygen kommentiert und als GitHub-Page veröffentlicht,
+ * README.md hat link auf GitHub-Page.
+ */
+
 #ifndef BLATT_7_AUFGABE_1_SBEM_AVLTREE_H
 #define BLATT_7_AUFGABE_1_SBEM_AVLTREE_H
 
@@ -178,10 +183,22 @@ public:
      *       - der andere Teilbaum q von vp kann nur eine Höhe von 0, 1 oder 2 haben
      *       2.1.1: q hat Höhe 0:
      *         -> bal(p) war 1 und wird zu 0
-     *         -> aufruf upout(p) auf Suchpfad zur Wurzel
+     *         -> aufruf upout() auf Suchpfad zur Wurzel
      *       2.1.2: q hat Höhe von 1:
-     *         -> bal(p) war 0 und wird zu -1
+     *         -> bal(p) war 0 und wird zu -1 oder 1
+     *       2.1.3: q hat Höhe von 2:
+     *         -> bal(p) war -1 oder 1 und wird zu -2 oder 2
+     *         => AVL-Kriterium verletzt!!!
+     *            1.) Rotation oder Doppelrotation (wann welches?)
+     *            2.) Falls neue bal(neue Wurzel nach Rotation) == 0, ist Höhe um 1 gesunken
+     *            3.) Aufruf upout() auf Suchpfad zur Wurzel
+     *
      *     * Fall 2.2: Ein Nachfolger ist innerer Knoten und einer ist Blatt
+     *       - falls p nur inneren Knoten q und ein Blatt als Nachfolger hat
+     *         müssen beide Nachfolger von q Blätter sein (AVL-Kriterium)
+     *       -> p->key = q->key und q wird durch Blatt ersetzt
+     *       -> Aufruf upout(), da Höhe von Teilbaum von 2 auf 1 gesunken ist
+     *
      *     * Fall 2.3: Beide Nachfolger sind innere Knoten
      */
     void remove(const int);
