@@ -15,6 +15,25 @@ AVLTree::Node::Node(const int k,Node *p)
 AVLTree::Node::Node(const int k,Node *p, Node *l, Node *r)
         : key(k), prev(p), left(l), right(r) {}
 
+
+/********************************************************************
+ * Destructors
+ *******************************************************************/
+
+AVLTree::Node::~Node(){
+    delete left;
+    delete right;
+}
+
+AVLTree::~AVLTree(){
+    delete root;
+}
+
+
+/********************************************************************
+ * search, insert and remove
+ *******************************************************************/
+
 bool AVLTree::search(const int value) const {
     if (root == nullptr) {
         return false;
@@ -59,6 +78,14 @@ void AVLTree::insert(int value, Node *node) {
             }
         }
         upin(node);
+    }
+}
+
+void AVLTree::remove(const int key) {
+    if(!search(key)) {
+        return;
+    } else {
+
     }
 }
 
