@@ -39,27 +39,32 @@ void AVLTree::insert(int value) {
     if (root == nullptr) {
         root = new Node(value);
     } else {
-        insert(value, root);
+        Node *tmp = root;
+        Node *tmpPrev;
+        while (tmp != nullptr) {
+            if (tmp->key == value) {
+                return;
+            }
+            if (value < tmp->key) {
+                tmpPrev = tmp;
+                tmp = tmp->left;
+            } else {
+                tmpPrev = tmp;
+                tmp = tmp->left;
+            }
+
+        }
+        insert(value, tmpPrev);
     }
 }
 
 void AVLTree::insert(int value, Node *node) {
-    if (value != node->key) {
-        if (value < node->key) {
-            if (node->left == nullptr) {
-                node->left = new Node(value);
-            } else {
-                insert(value, node->left);
-            }
-        } else {
-            if (node->right == nullptr) {
-                node->right = new Node(value);
-            } else {
-                insert(value, node->right);
-            }
-        }
-        upin(node);
+    if (value < node->key) {
+        node->left = new Node(value);
+    } else {
+        node->right = new Node(value);
     }
+    upin(node);
 }
 
 
