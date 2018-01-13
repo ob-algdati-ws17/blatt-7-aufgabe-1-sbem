@@ -57,7 +57,8 @@ bool AVLTree::Node::search(const int value) const {
 void AVLTree::insert(int value) {
     if (root == nullptr) {
         root = new Node(value);
-    } else {
+    }
+    else {
         insert(value, root);
     }
 }
@@ -66,29 +67,109 @@ void AVLTree::insert(int value, Node *node) {
     if (value != node->key) {
         if (value < node->key) {
             if (node->left == nullptr) {
-                node->left = new Node(value);
-            } else {
-                insert(value, node->left);
+                node->left = new Node(value, node);
+                node->bal -= 1;
+                if (node->bal =! 0) {
+                    upin(node);
+                }
+            }
+            else {
+                insert(value, node);
             }
         } else {
-            if (node->right == nullptr) {
-                node->right = new Node(value);
+            if (node->left == nullptr) {
+                node->left = new Node(value, node);
+                node->bal += 1;
+                if (node->bal =! 0) {
+                    upin(node);
+                }
             } else {
-                insert(value, node->right);
+                insert(value, node);
             }
         }
-        upin(node);
     }
 }
 
-void AVLTree::remove(const int key) {
-    if(!search(key)) {
-        return;
-    } else {
-
+void AVLTree::upin(Node *node) {
+    if (node->prev != nullptr) {
+        // Left child of his parent.
+        if (node->key < node->prev->key) {
+            if (node->prev->bal == 1) {
+                node->prev->bal = 0;
+            }
+            else if (node->prev->bal == 0) {
+                node->prev->bal = -1;
+                upin(node->prev);
+            }
+            else {
+                if (node->bal == -1) {
+                    if (node->prev->prev == nullptr) {
+                        root = rotateRight(node->prev);
+                    }
+                    else if (node->prev->key < node->prev->prev->key) {
+                        node->prev->prev->left = rotateRight(node->prev);
+//                        node->bal = 0;
+//                        node->right->bal = 0;
+                    }
+                    else {
+                        node->prev->prev->right = rotateRight(node->prev);
+//                        node->bal = 0;
+//                        node->right->bal = 0;
+                    }
+                }
+                else if (node->bal == 1) {
+                    if (node->prev->prev == nullptr) {
+                        root = rotateLeftRight(node->prev);
+                    }
+                    else if (node->prev->key < node->prev->prev->key) {
+                        node->prev->prev->left = rotateLeftRight(node->prev);
+                    }
+                    else {
+                        node->prev->prev->right = rotateLeftRight(node->prev);
+                    }
+                }
+            }
+        }
+        // Right child of his parent.
+        else {
+            if (node->prev->bal == -1) {
+                node->prev->bal = 0;
+            }
+            else if (node->prev->bal == 0) {
+                node->prev->bal = 1;
+                upin(node->prev);
+            }
+            else {
+                if (node->bal == 1) {
+                    if (node->prev->prev == nullptr) {
+                        root = rotateLeft(node->prev);
+                    }
+                    else if (node->prev->key < node->prev->prev->key) {
+                        node->prev->prev->left = rotateLeft(node->prev);
+//                        node->bal = 0;
+//                        node->right->bal = 0;
+                    }
+                    else {
+                        node->prev->prev->right = rotateLeft(node->prev);
+//                        node->bal = 0;
+//                        node->right->bal = 0;
+                    }
+                }
+                else if (node->bal == -1) {
+                    if (node->prev->prev == nullptr) {
+                        root = rotateRightLeft(node->prev);
+                    }
+                    else if (node->prev->key < node->prev->prev->key) {
+                        node->prev->prev->left = rotateRightLeft(node->prev);
+                    }
+                    else {
+                        node->prev->prev->right = rotateRightLeft(node->prev);
+                    }
+                }
+            }
+        }
     }
 }
-
 
 /********************************************************************
  * Rotations
@@ -118,10 +199,6 @@ AVLTree::Node *AVLTree::rotateLeftRight(Node *n) {
 AVLTree::Node *AVLTree::rotateRightLeft(Node *n) {
     n->right = rotateRight(n->right);
     return rotateLeft(n);
-}
-
-void AVLTree::upin(Node *node) {
-
 }
 
 /********************************************************************
