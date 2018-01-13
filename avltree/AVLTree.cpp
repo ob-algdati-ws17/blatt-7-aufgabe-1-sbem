@@ -50,16 +50,16 @@ AVLTree::Node *AVLTree::findSymPred(AVLTree::Node *n) {
  * search, insert and remove
  *******************************************************************/
 
-bool AVLTree::search(const int value) const {
+AVLTree::Node *AVLTree::search(const int value) {
     if (root == nullptr) {
-        return false;
+        return nullptr;
     }
     return root->search(value);
 }
 
-bool AVLTree::Node::search(const int value) const {
+AVLTree::Node *AVLTree::Node::search(const int value) {
     if (value == key) {
-        return true;
+        return this;
     }
     if (value < key && left != nullptr) {
         return left->search(value);
@@ -67,7 +67,7 @@ bool AVLTree::Node::search(const int value) const {
     if (value > key && right != nullptr) {
         return right->search(value);
     }
-    return false;
+    return nullptr;
 }
 
 void AVLTree::insert(int value) {
@@ -98,10 +98,64 @@ void AVLTree::insert(int value, Node *node) {
 }
 
 void AVLTree::remove(const int key) {
-    if(!search(key)) {
-        return;
-    } else {
+    auto p = search(key);
 
+    if(p != nullptr) {
+        if(p != root) {
+            // case 1
+            if(p->left == nullptr && p->right == nullptr) {
+                // q is right successor of pp
+                if(p->key < p->prev->key) {
+                    // case 1.1
+                    if(p->prev->right->bal == '0') {
+                        p->prev->bal = 0;
+                        upout(p->prev);
+                    }
+                        // case 1.2
+                    else if(p->prev->right->bal == '1') {
+                        p->prev->bal = 1;
+                    }
+                        // case 1.3
+                    else {
+
+                    }
+                    // replace p with a leaf (nullptr) and
+                    // delete p
+                    p->prev->left = nullptr;
+                    delete p;
+                }
+                    // q is left successor of pp
+                else {
+                    // replace p with a leaf (nullptr) and
+                    // delete p
+                    p->prev->right = nullptr;
+                    delete p;
+                }
+            }
+                // case 2
+            else if ((p->left == nullptr && p->right != nullptr) || (p->left != nullptr && p->right == nullptr)) {
+
+            }
+                // case 3
+            else {
+
+            }
+        }
+        else {
+            if(p->left == nullptr && p->right == nullptr) {
+                root = nullptr;
+            }
+            else {
+                if(p->left != nullptr && p->right == nullptr) {
+                    root = p->left;
+                }
+                else {
+                    root = p->right;
+                }
+                root->prev = nullptr;
+            }
+            delete p;
+        }
     }
 }
 
@@ -114,7 +168,12 @@ AVLTree::Node *AVLTree::rotateLeft(Node *n) {
     Node *oldRoot = n;
     Node *newRoot = oldRoot->right;
     oldRoot->right = newRoot->left;
+    if(oldRoot->right != nullptr) {
+        oldRoot->right->prev = oldRoot;
+    }
     newRoot->left = oldRoot;
+    newRoot->prev = oldRoot->prev;
+    oldRoot->prev = newRoot;
     return newRoot;
 }
 
@@ -122,17 +181,24 @@ AVLTree::Node *AVLTree::rotateRight(Node *n) {
     Node *oldRoot = n;
     Node *newRoot = oldRoot->left;
     oldRoot->left = newRoot->right;
+    if(oldRoot->left != nullptr) {
+        oldRoot->left->prev = oldRoot;
+    }
     newRoot->right = oldRoot;
+    newRoot->prev = oldRoot->prev;
+    oldRoot->prev = newRoot;
     return newRoot;
 }
 
 AVLTree::Node *AVLTree::rotateLeftRight(Node *n) {
     n->left = rotateLeft(n->left);
+    n->left->prev = n;
     return rotateRight(n);
 }
 
 AVLTree::Node *AVLTree::rotateRightLeft(Node *n) {
     n->right = rotateRight(n->right);
+    n->right->prev = n;
     return rotateLeft(n);
 }
 
