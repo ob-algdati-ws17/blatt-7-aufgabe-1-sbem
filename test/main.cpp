@@ -1,4 +1,10 @@
-//
-// Created by basti on 12/6/17.
-//
+/**
+ * @authors Ehsan Moslehi, Sebastian Bauman
+ */
 
+#include "gtest/gtest.h"
+
+int main(int argc, char **argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
