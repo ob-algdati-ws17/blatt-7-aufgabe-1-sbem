@@ -169,30 +169,40 @@ private:
      *         -> fertig
      *
      * Fall 2: p ist rechter Sohn seines Vaters pp
-     *    Fall 1.1: bal(pp) == -1
+     *    Fall 2.1: bal(pp) == -1
      *    -> bal(pp) wird zu 0
      *    -> fertig
      *
-     *    Fall 1.2: bal(pp) == 0
+     *    Fall 2.2: bal(pp) == 0
      *    -> bal(pp) wird zu 1
      *    -> fertig
      *
-     *    Fall 1.3: bal(pp) == 1
+     *    Fall 2.3: bal(pp) == 1
      *    -> bal(pp) wird zu 2 => AVL-Bedingung verletzt!!!!
      *    -> q ist linker Nachfolger von pp (also linker Bruder von p). Fallunterscheidung nach bal(q):
-     *       Fall 1.3.1: bal(q) == 0
+     *       Fall 2.3.1: bal(q) == 0
      *         => rotateRight(pp)
      *         -> fertig
-     *       Fall 1.3.2: bal(q) == 1
+     *       Fall 2.3.2: bal(q) == 1
      *         => rotateRight(pp)
      *         => upout(neue Wurzel des Teilbaums nach Rotation)
      *         -> fertig
-     *       Fall 1.3.3: bal(q) == -1
+     *       Fall 2.3.3: bal(q) == -1
      *         => rotateLeftRight(pp)
      *         => upout(neue Wurzel des Teilbaums nach Doppel-Rotation)
      *         -> fertig
      */
-    void upout(const int);
+    /*
+     * \Brief Method adjusts the balances of nodes of an avl tree after a node was removed from the tree.
+     *
+     * This method is called, after a node of an avl tree has been removed. Its task is to adjust the
+     * balances of nodes and to rotate a section tree in the right way if it is necessary. Before upout()
+     * begins to work, the precondition, that the node given as a parameter must have
+     * a balance value of 0, must be fulfilled.
+     *
+     * @param Node object of which the balance has to be adjusted
+     */
+    void upout(Node*);
 
     void insert(const int, Node*);
 
@@ -244,33 +254,38 @@ public:
      * 1.) Suche nach Knoten p mit entsprechendem Schluessel
      *     => Knoten p nicht gefunden -> fertig
      * 2.) Knoten p mit entsprechendem Schluessel gefunden:
-     *     * Fall 2.1: beide Nachfolger sind Blaetter
+     *     * Fall 1: beide Nachfolger von p sind Blaetter
      *       - ersetzen des Knotens durch ein Blatt (nullptr)
-     *       - vp ist Vorgänger von p
-     *       - der andere Teilbaum q von vp kann nur eine Höhe von 0, 1 oder 2 haben
-     *       2.1.1: q hat Höhe 0:
+     *       - pp ist Vorgänger von p
+     *       - der andere Teilbaum q von pp kann nur eine Höhe von 0, 1 oder 2 haben. Fallunterscheidung Höhe von q:
+     *
+     *         Fall 1.1: q hat Höhe 0:
      *         -> bal(p) war 1 und wird zu 0
      *         -> aufruf upout() auf Suchpfad zur Wurzel
-     *       2.1.2: q hat Höhe von 1:
+     *         -> fertig
+     *
+     *         Fall 1.2: q hat Höhe von 1:
      *         -> bal(p) war 0 und wird zu -1 oder 1
-     *       2.1.3: q hat Höhe von 2:
+     *         -> fertig
+     *
+     *         Fall 1.3: q hat Höhe von 2:
      *         -> bal(p) war -1 oder 1 und wird zu -2 oder 2
      *         => AVL-Kriterium verletzt!!!
      *            1.) Rotation oder Doppelrotation (wann welches?)
      *            2.) Falls neue bal(neue Wurzel nach Rotation) == 0, ist Höhe um 1 gesunken
      *            3.) Aufruf upout() auf Suchpfad zur Wurzel
+     *         -> fertig
      *
-     *     * Fall 2.2: Ein Nachfolger ist innerer Knoten und einer ist Blatt
+     *     * Fall 2: Ein Nachfolger ist innerer Knoten und einer ist Blatt
      *       - falls p nur inneren Knoten q und ein Blatt als Nachfolger hat
      *         müssen beide Nachfolger von q Blätter sein (AVL-Kriterium)
      *       -> p->key = q->key und q wird durch Blatt ersetzt
      *       -> Aufruf upout(), da Höhe von Teilbaum von 2 auf 1 gesunken ist
      *
-     *     * Fall 2.3: Beide Nachfolger sind innere Knoten
+     *     * Fall 3: Beide Nachfolger sind innere Knoten
      *       -> Wie bei nat. Suchbäumen:
-     *          - ersetzen des Schlüssels von p durch Schlüssel des sym. Vorgängers/Nachfolgers
-     *            (hierzu eine Methode basteln!!)
-     *          - entfernen des sym. Vorgängers/Nachfolgers
+     *          - ersetzen des Schlüssels von p durch Schlüssel des sym. Vorgängers
+     *          - entfernen des sym. Vorgängers
      *          -> entspricht entfernen eines Knotes gemäß Fall 2.1 oder 2.2
      */
     void remove(const int);

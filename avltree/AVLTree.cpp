@@ -35,7 +35,14 @@ AVLTree::~AVLTree(){
  *******************************************************************/
 
 AVLTree::Node *AVLTree::findSymPred(AVLTree::Node *n) {
-    return nullptr;
+    auto smallest_node = n->left;
+    if(smallest_node != nullptr) {
+        while(smallest_node->right != nullptr) {
+            smallest_node = smallest_node->right;
+        }
+    }
+
+    return smallest_node;
 }
 
 
@@ -129,13 +136,117 @@ AVLTree::Node *AVLTree::rotateRightLeft(Node *n) {
     return rotateLeft(n);
 }
 
+
+/********************************************************************
+ * upin(p) and upout(p)
+ *******************************************************************/
+
 void AVLTree::upin(Node *node) {
 
 }
 
+void AVLTree::upout(Node *node) {
+    if(node->bal == '0') {
+        // p is left child of father pp
+        if(node->key < node->prev->key) {
+            if(node->prev->bal == '-1') {
+                node->prev->bal = 0;
+            }
+            else if(node->prev->bal == '0') {
+                node->prev->bal = 1;
+            }
+            else {
+                // case 1.3.1
+                if(node->prev->right->bal == '0') {
+                    if(node->prev->key < node->prev->prev->key) {
+                        // we have to link the left pointer of the father
+                        // of the father to the return of rotate method
+                        node->prev->prev->left = rotateLeft(node->prev);
+                    }
+                    else {
+                        // we have to link the right pointer of the father
+                        // of the father to the return of rotate method
+                        node->prev->prev->right = rotateLeft(node->prev);
+                    }
+                }
+                // case 1.3.2
+                else if(node->prev->right->bal == '1') {
+                    if(node->prev->key < node->prev->prev->key) {
+                        node->prev->prev->left = rotateLeft(node->prev);
+                        upout(node->prev->prev->left);
+                    }
+                    else {
+                        node->prev->prev->right = rotateLeft(node->prev);
+                        upout(node->prev->prev->right);
+                    }
+                }
+                // case 1.3.3
+                else {
+                    if(node->prev->key < node->prev->prev->key) {
+                        node->prev->prev->left = rotateRightLeft(node->prev);
+                        upout(node->prev->prev->left);
+                    }
+                    else {
+                        node->prev->prev->right = rotateRightLeft(node->prev);
+                        upout(node->prev->prev->right);
+                    }
+                }
+            }
+        }
+        // p is right child of father pp
+        else {
+            if(node->prev->bal == '-1') {
+                node->prev->bal = 0;
+            }
+            else if(node->prev->bal == '0') {
+                node->prev->bal = 1;
+            }
+            else {
+                // case 2.3.1
+                if(node->prev->left->bal == '0') {
+                    if(node->prev->key < node->prev->prev->key) {
+                        // we have to link the left pointer of the father
+                        // of the father to the return of rotate method
+                        node->prev->prev->left = rotateRight(node->prev);
+                    }
+                    else {
+                        // we have to link the right pointer of the father
+                        // of the father to the return of rotate method
+                        node->prev->prev->right = rotateRight(node->prev);
+                    }
+                }
+                    // case 2.3.2
+                else if(node->prev->left->bal == '1') {
+                    if(node->prev->key < node->prev->prev->key) {
+                        node->prev->prev->left = rotateRight(node->prev);
+                        upout(node->prev->prev->left);
+                    }
+                    else {
+                        node->prev->prev->right = rotateRight(node->prev);
+                        upout(node->prev->prev->right);
+                    }
+                }
+                    // case 2.3.3
+                else {
+                    if(node->prev->key < node->prev->prev->key) {
+                        node->prev->prev->left = rotateLeftRight(node->prev);
+                        upout(node->prev->prev->left);
+                    }
+                    else {
+                        node->prev->prev->right = rotateLeftRight(node->prev);
+                        upout(node->prev->prev->right);
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 /********************************************************************
  * Traversal
  *******************************************************************/
+
 // © Prof. Dr. Oliver Braun
 // The following code is extracted from the solution to the assignment Blatt 6
 vector<int> *AVLTree::preorder() const {
