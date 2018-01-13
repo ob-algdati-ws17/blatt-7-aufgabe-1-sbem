@@ -140,6 +140,17 @@ private:
 
     void insert(const int, Node*);
 
+    /*
+     * \Brief Method finds symmetric predecessor to a given Node object.
+     *
+     * This method iterates through an avl tree, finds and returns the found symmetric
+     * predecessor to a Node object, which must be transferred to the method as a parameter.
+     *
+     * @param Node object as start for the iteration
+     * @return the found symmetric predecessor as a Node object
+     */
+    Node *findSymPred(Node *);
+
     // ---------------------------------------------------------------------------------------
 
 
@@ -200,6 +211,11 @@ public:
      *       -> Aufruf upout(), da Höhe von Teilbaum von 2 auf 1 gesunken ist
      *
      *     * Fall 2.3: Beide Nachfolger sind innere Knoten
+     *       -> Wie bei nat. Suchbäumen:
+     *          - ersetzen des Schlüssels von p durch Schlüssel des sym. Vorgängers/Nachfolgers
+     *            (hierzu eine Methode basteln!!)
+     *          - entfernen des sym. Vorgängers/Nachfolgers
+     *          -> entspricht entfernen eines Knotes gemäß Fall 2.1 oder 2.2
      */
     void remove(const int);
 
