@@ -259,35 +259,58 @@ public:
      *       - pp ist Vorgänger von p
      *       - der andere Teilbaum q von pp kann nur eine Höhe von 0, 1 oder 2 haben. Fallunterscheidung Höhe von q:
      *
-     *         Fall 1.1: q hat Höhe 0:
-     *         -> bal(pp) war 1 und wird zu 0
-     *         -> aufruf upout(pp) auf Suchpfad zur Wurzel
+     *     -> p ist linker Nachfolger von pp, q ist rechter Nachfolger:
+     *         Fall 1.1.l: q hat Höhe 0:
+     *         -> bal(pp) war -1 und wird zu 0
+     *         -> Aufruf upout(pp) auf Suchpfad zur Wurzel
      *         -> fertig
      *
-     *         Fall 1.2: q hat Höhe von 1:
-     *         -> bal(pp) war 0 und wird zu -1 (falls p rechter Nachfolger von pp)
-     *            oder 1 (falls p linker Nachfolger von pp)
+     *         Fall 1.2.l: q hat Höhe von 1:
+     *         -> bal(pp) war 0 und wird zu 1
      *         -> fertig
      *
-     *         Fall 1.3: q hat Höhe von 2:
-     *         -> bal(p) war -1 oder 1 und wird zu -2 oder 2
+     *         Fall 1.3.l: q hat Höhe von 2:
+     *         -> bal(p) war 1 und wird zu 2
      *         => AVL-Kriterium verletzt!!!
-     *            1.) Rotation oder Doppelrotation (wann welches?)
-     *            2.) Falls neue bal(neue Wurzel nach Rotation) == 0, ist Höhe um 1 gesunken
-     *            3.) Aufruf upout(pp) auf Suchpfad zur Wurzel
+     *            1.) Fallunterscheidung:
+     *                a) bal(q) == 0 -> rotateLeft(pp)
+     *                b) bal(q) == 1 -> rotateLeft(pp) & upout(neue Wurzel nach Rotation)
+     *                b) bal(q) < 0 -> rotateRightLeft(pp) & upout(neue Wurzel nach Rotation)
+     *         -> fertig
+     *
+     *     -> p ist rechter Nachfolger von pp, q ist linker Nachfolger:
+     *         Fall 1.1.r: q hat Höhe 0:
+     *         -> bal(pp) war 1 und wird zu 0
+     *         -> Aufruf upout(pp) auf Suchpfad zur Wurzel
+     *         -> fertig
+     *
+     *         Fall 1.2.r: q hat Höhe von 1:
+     *         -> bal(pp) war 0 und wird zu -1
+     *         -> fertig
+     *
+     *         Fall 1.3.r: q hat Höhe von 2:
+     *         -> bal(p) war -1 und wird zu -2
+     *         => AVL-Kriterium verletzt!!!
+     *            1.) Fallunterscheidung:
+     *                a) bal(q) == 0 -> rotateRight(pp)
+     *                b) bal(q) == 1 -> rotateRight(pp) & upout(neue Wurzel nach Rotation)
+     *                b) bal(q) < 0 -> rotateLeftRight(pp) & upout(neue Wurzel nach Rotation)
      *         -> fertig
      *
      *     * Fall 2: Ein Nachfolger ist innerer Knoten und einer ist Blatt
      *       - falls p nur inneren Knoten q und ein Blatt als Nachfolger hat
      *         müssen beide Nachfolger von q Blätter sein (AVL-Kriterium)
      *       -> p->key = q->key und q wird durch Blatt ersetzt
-     *       -> Aufruf upout(), da Höhe von Teilbaum von 2 auf 1 gesunken ist
+     *       -> Aufruf upout(pp), da Höhe von Teilbaum von 2 auf 1 gesunken ist
      *
      *     * Fall 3: Beide Nachfolger sind innere Knoten
-     *       -> Wie bei nat. Suchbäumen:
+     *       -> Wie bei natürlichen Suchbäumen:
      *          - ersetzen des Schlüssels von p durch Schlüssel des sym. Vorgängers
      *          - entfernen des sym. Vorgängers
      *          -> entspricht entfernen eines Knotes gemäß Fall 2.1 oder 2.2
+     *
+     *
+     *
      */
     void remove(const int);
 
