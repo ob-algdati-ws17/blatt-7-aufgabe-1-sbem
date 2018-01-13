@@ -104,53 +104,179 @@ void AVLTree::remove(const int key) {
         if(p != root) {
             // case 1
             if(p->left == nullptr && p->right == nullptr) {
+                // p is left successor of pp
                 // q is right successor of pp
                 if(p->key < p->prev->key) {
-                    // case 1.1
-                    if(p->prev->right->bal == '0') {
+                    // case 1.1.l -> height of q is 0
+                    if(p->prev->right == nullptr) {
                         p->prev->bal = 0;
                         upout(p->prev);
                     }
-                        // case 1.2
-                    else if(p->prev->right->bal == '1') {
+                    // case 1.2.l -> height of q is 1
+                    else if(p->prev->right->left == nullptr && p->prev->right->right == nullptr) {
                         p->prev->bal = 1;
                     }
-                        // case 1.3
+                    // case 1.3.l
                     else {
-
+                        // case 1.3.l.a
+                        if(p->prev->right->bal == '0') {
+                            // pp is left child
+                            if(p->prev->key < p->prev->prev->key) {
+                                p->prev->prev->left = rotateLeft(p->prev);
+                            }
+                            // pp is right child
+                            else {
+                                p->prev->prev->right = rotateLeft(p->prev);
+                            }
+                        }
+                        // case 1.3.l.b
+                        else if(p->prev->right->bal == '1') {
+                            // pp is left child
+                            if(p->prev->key < p->prev->prev->key) {
+                                p->prev->prev->left = rotateLeft(p->prev);
+                                upout(p->prev->prev->left);
+                            }
+                            // pp is right child
+                            else {
+                                p->prev->prev->right = rotateLeft(p->prev);
+                                upout(p->prev->prev->right);
+                            }
+                        }
+                        // case 1.3.l.c
+                        else {
+                            // pp is left child
+                            if(p->prev->key < p->prev->prev->key) {
+                                p->prev->prev->left = rotateRightLeft(p->prev);
+                                upout(p->prev->prev->left);
+                            }
+                            // pp is right child
+                            else {
+                                p->prev->prev->right = rotateRightLeft(p->prev);
+                                upout(p->prev->prev->right);
+                            }
+                        }
                     }
                     // replace p with a leaf (nullptr) and
                     // delete p
                     p->prev->left = nullptr;
                     delete p;
                 }
+                    // p is right successor of pp
                     // q is left successor of pp
                 else {
+                    // case 1.1.r -> height of q is 0
+                    if(p->prev->left == nullptr) {
+                        p->prev->bal = 0;
+                        upout(p->prev);
+                    }
+                    // case 1.2.r -> height of q is 1
+                    else if(p->prev->left->left == nullptr && p->prev->left->right == nullptr) {
+                        p->prev->bal = 1;
+                    }
+                    // case 1.3.r
+                    else {
+                        // case 1.3.r.a
+                        if(p->prev->left->bal == '0') {
+                            // pp is left child
+                            if(p->prev->key < p->prev->prev->key) {
+                                p->prev->prev->left = rotateRight(p->prev);
+                            }
+                            // pp is right child
+                            else {
+                                p->prev->prev->right = rotateRight(p->prev);
+                            }
+                        }
+                        // case 1.3.r.b
+                        else if(p->prev->left->bal == '1') {
+                            // pp is left child
+                            if(p->prev->key < p->prev->prev->key) {
+                                p->prev->prev->left = rotateRight(p->prev);
+                                upout(p->prev->prev->left);
+                            }
+                            // pp is right child
+                            else {
+                                p->prev->prev->right = rotateRight(p->prev);
+                                upout(p->prev->prev->right);
+                            }
+                        }
+                        // case 1.3.r.c
+                        else {
+                            // pp is left child
+                            if(p->prev->key < p->prev->prev->key) {
+                                p->prev->prev->left = rotateLeftRight(p->prev);
+                                upout(p->prev->prev->left);
+                            }
+                            // pp is right child
+                            else {
+                                p->prev->prev->right = rotateLeftRight(p->prev);
+                                upout(p->prev->prev->right);
+                            }
+                        }
+                    }
                     // replace p with a leaf (nullptr) and
                     // delete p
                     p->prev->right = nullptr;
                     delete p;
                 }
             }
-                // case 2
+            // case 2
             else if ((p->left == nullptr && p->right != nullptr) || (p->left != nullptr && p->right == nullptr)) {
-
+                // p has only left child
+                if(p->left != nullptr) {
+                    if(p->key < p->prev->key) {
+                        p->prev->left = new Node(p->left->key);
+                    }
+                    else {
+                        p->prev->right = new Node(p->left->key);
+                    }
+                    upout(p->prev);
+                }
+                // p has only right child
+                else {
+                    if(p->key < p->prev->key) {
+                        p->prev->left = new Node(p->right->key);
+                    }
+                    else {
+                        p->prev->right = new Node(p->right->key);
+                    }
+                    upout(p->prev);
+                }
             }
-                // case 3
+            // case 3
             else {
-
+                auto symPred = findSymPred(p);
+                // p is left child of pp
+                if(p->key < p->prev->key) {
+                    p->prev->left = new Node(symPred->key);
+                }
+                // p is right child of pp
+                else {
+                    p->prev->right = new Node(symPred->key);
+                }
+                // delets the symmetric predecessor of p
+                remove(symPred->key);
             }
         }
+        // if p is the root of the whole avl tree
         else {
+            // p has only leafs as childs
             if(p->left == nullptr && p->right == nullptr) {
                 root = nullptr;
             }
+            // if p has childs
             else {
                 if(p->left != nullptr && p->right == nullptr) {
                     root = p->left;
                 }
-                else {
+                else if(p->left == nullptr && p->right != nullptr) {
                     root = p->right;
+                }
+                else {
+                    auto symPredKey = findSymPred(p)->key;
+                    remove(symPredKey);
+                    root = new Node(symPredKey);
+                    root->left = p->left;
+                    root->right = p->right;
                 }
                 root->prev = nullptr;
             }

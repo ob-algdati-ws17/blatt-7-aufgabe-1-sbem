@@ -275,7 +275,7 @@ public:
      *            1.) Fallunterscheidung:
      *                a) bal(q) == 0 -> rotateLeft(pp)
      *                b) bal(q) == 1 -> rotateLeft(pp) & upout(neue Wurzel nach Rotation)
-     *                b) bal(q) < 0 -> rotateRightLeft(pp) & upout(neue Wurzel nach Rotation)
+     *                c) bal(q) < 0 -> rotateRightLeft(pp) & upout(neue Wurzel nach Rotation)
      *         -> fertig
      *
      *     -> p ist rechter Nachfolger von pp, q ist linker Nachfolger:
@@ -294,7 +294,7 @@ public:
      *            1.) Fallunterscheidung:
      *                a) bal(q) == 0 -> rotateRight(pp)
      *                b) bal(q) == 1 -> rotateRight(pp) & upout(neue Wurzel nach Rotation)
-     *                b) bal(q) < 0 -> rotateLeftRight(pp) & upout(neue Wurzel nach Rotation)
+     *                c) bal(q) < 0 -> rotateLeftRight(pp) & upout(neue Wurzel nach Rotation)
      *         -> fertig
      *
      *     * Fall 2: Ein Nachfolger ist innerer Knoten und einer ist Blatt
@@ -307,7 +307,7 @@ public:
      *       -> Wie bei natürlichen Suchbäumen:
      *          - ersetzen des Schlüssels von p durch Schlüssel des sym. Vorgängers
      *          - entfernen des sym. Vorgängers
-     *          -> entspricht entfernen eines Knotes gemäß Fall 2.1 oder 2.2
+     *          -> entspricht entfernen eines Knotes gemäß Fall 1 oder 2
      *
      *
      *
