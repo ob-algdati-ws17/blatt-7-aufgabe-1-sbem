@@ -102,40 +102,96 @@ private:
      * Methode upin(p) laeuft den Pfad von Knoten p zurueck zu Wurzel und passt Balance-Faktor bal an.
      * upin(p) wird rekursiv aufgerufen und bricht ab, wenn p die Wurzel ist!
      *
-     * yp ist Vorgaengerklnoten von p
+     * pp ist Vorgaengerklnoten von p (parent of p)
      *
-     * 1.) p ist linker Nachfolger von yp:
-     * Fall 1.1 - bal(yp) war 1 und wird 0:
-     *   + falls yp Wurzel eines Teilbaums und
-     *   + bal(yp) durch upin(p) zu 0 wird, dann
+     * 1.) p ist linker Nachfolger von pp:
+     * Fall 1.1 - bal(pp) war 1 und wird 0:
+     *   + falls pp Wurzel eines Teilbaums und
+     *   + bal(pp) durch upin(p) zu 0 wird, dann
      *   + kann sich nichts weiter mehr geaendert haben und
      *   + upin() kann beendet werden
      *
-     * Fall 1.2 - bal(yp) war 0 und wird -1:
-     *   + falls bal(yp) 0 war und durch upin(p) zu -1 wird
-     *   + muss upin(yp) aufgerufen werden (-> rekursiver Aufruf)
+     * Fall 1.2 - bal(pp) war 0 und wird -1:
+     *   + falls bal(pp) 0 war und durch upin(p) zu -1 wird
+     *   + muss upin(pp) aufgerufen werden (-> rekursiver Aufruf)
      *
-     * Fall 1.3 - bal(yp) war -1 und wuerde zu -2:
+     * Fall 1.3 - bal(pp) war -1 und wuerde zu -2:
      *   + ERROR!! AVL-Bedingung wuerde verletzt werden
-     *   + bal(yp) darf nicht zu -2 werden!
+     *   + bal(pp) darf nicht zu -2 werden!
      *   + Fall 1.3.1 - bal(p) == -1:
      *     * Ausfuehren einer Rotation nach rechts
-     *     * Anschließend sind bal(yp) und bal(p) == 0
+     *     * Anschließend sind bal(pp) und bal(p) == 0
      *     * fertig
      *   + Fall 1.3.2 - bal(p) == 1:
      *     * Ausfuehren einer Doppelrotation nach links-rechts
-     *     * Anschließend ist bal(yp) == 0
+     *     * Anschließend ist bal(pp) == 0
      *     * fertig
      *
-     * 2.) p ist rechter Nachfolger von yp:
-     * Fall 2.1 -> Analog zu "p ist linker Nachfolger von yp"
-     * Fall 2.2 -> Analog zu "p ist linker Nachfolger von yp"
-     * Fall 2.3.1 -> Rotation nach links, ansonsten analog zu "p ist linker Nachfolger von yp"
-     * Fall 2.3.2 -> Doppelrotation nach rechts-links, ansonsten analog zu "p ist linker Nachfolger von yp"
+     * 2.) p ist rechter Nachfolger von pp:
+     * Fall 2.1 -> Analog zu "p ist linker Nachfolger von pp"
+     * Fall 2.2 -> Analog zu "p ist linker Nachfolger von pp"
+     * Fall 2.3.1 -> Rotation nach links, ansonsten analog zu "p ist linker Nachfolger von pp"
+     * Fall 2.3.2 -> Doppelrotation nach rechts-links, ansonsten analog zu "p ist linker Nachfolger von pp"
      */
     void upin(Node*);
 
-    //
+    /*
+     * -> upout(p) kann rekursiv längs des Suchpfades aufgerufen werden
+     * -> adjustiert die Höhenbalancen jedes Knotens
+     * -> führt ggf. Rotationen oder Doppelrotationen durch
+     * -> wenn upout(p) aufgerufen wird gilt:
+     *    - bal(p) == 0
+     *    - Teilbaum mit Wurzel p ist in Höhe um 1 geschrumpft
+     *    -> die Invariante (bal(p) = 0) muss VOR jedem Aufruf von upout(p) gelten!!!
+     *
+     * Fall 1: p ist linker Sohn seines Vaters pp
+     *    Fall 1.1: bal(pp) == -1
+     *    -> bal(pp) wird zu 0
+     *    -> fertig
+     *
+     *    Fall 1.2: bal(pp) == 0
+     *    -> bal(pp) wird zu 1
+     *    -> fertig
+     *
+     *    Fall 1.3: bal(pp) == 1
+     *    -> bal(pp) wird zu 2 => AVL-Bedingung verletzt!!!!
+     *    -> q ist rechter Nachfolger von pp (also rechter Bruder von p). Fallunterscheidung nach bal(q):
+     *       Fall 1.3.1: bal(q) == 0
+     *         => rotateLeft(pp)
+     *         -> fertig
+     *       Fall 1.3.2: bal(q) == 1
+     *         => rotateLeft(pp)
+     *         => upout(neue Wurzel des Teilbaums nach Rotation)
+     *         -> fertig
+     *       Fall 1.3.3: bal(q) == -1
+     *         => rotateRightLeft(pp)
+     *         => upout(neue Wurzel des Teilbaums nach Doppel-Rotation)
+     *         -> fertig
+     *
+     * Fall 2: p ist rechter Sohn seines Vaters pp
+     *    Fall 1.1: bal(pp) == -1
+     *    -> bal(pp) wird zu 0
+     *    -> fertig
+     *
+     *    Fall 1.2: bal(pp) == 0
+     *    -> bal(pp) wird zu 1
+     *    -> fertig
+     *
+     *    Fall 1.3: bal(pp) == 1
+     *    -> bal(pp) wird zu 2 => AVL-Bedingung verletzt!!!!
+     *    -> q ist linker Nachfolger von pp (also linker Bruder von p). Fallunterscheidung nach bal(q):
+     *       Fall 1.3.1: bal(q) == 0
+     *         => rotateRight(pp)
+     *         -> fertig
+     *       Fall 1.3.2: bal(q) == 1
+     *         => rotateRight(pp)
+     *         => upout(neue Wurzel des Teilbaums nach Rotation)
+     *         -> fertig
+     *       Fall 1.3.3: bal(q) == -1
+     *         => rotateLeftRight(pp)
+     *         => upout(neue Wurzel des Teilbaums nach Doppel-Rotation)
+     *         -> fertig
+     */
     void upout(const int);
 
     void insert(const int, Node*);
