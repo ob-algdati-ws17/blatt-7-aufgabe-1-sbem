@@ -38,39 +38,73 @@ bool AVLTree::Node::search(const int value) const {
 void AVLTree::insert(int value) {
     if (root == nullptr) {
         root = new Node(value);
-    } else {
-        Node *tmp = root;
-        Node *tmpPrev;
-        while (tmp != nullptr) {
-            if (tmp->key == value) {
-                return;
-            }
-            if (value < tmp->key) {
-                tmpPrev = tmp;
-                tmp = tmp->left;
-            } else {
-                tmpPrev = tmp;
-                tmp = tmp->left;
-            }
-
-        }
-        insert(value, tmpPrev);
+    }
+    else {
+        insert(value, root);
     }
 }
 
 void AVLTree::insert(int value, Node *node) {
-    if (value < node->key) {
-        node->left = new Node(value, node);
-        node->bal -= 1;
-    } else {
-        node->right = new Node(value, node);
-        node->bal += 1;
+    if (value != node->key) {
+        if (value < node->key) {
+            if (node->left == nullptr) {
+                node->left = new Node(value, node);
+                node->bal -= 1;
+                if (node->bal =! 0) {
+                    upin(node);
+                }
+            }
+            else {
+                insert(value, node);
+            }
+        } else {
+            if (node->left == nullptr) {
+                node->left = new Node(value, node);
+                node->bal += 1;
+                if (node->bal =! 0) {
+                    upin(node);
+                }
+            } else {
+                insert(value, node);
+            }
+        }
     }
-    upin(node);
 }
 
 void AVLTree::upin(Node *node) {
+    if (node->prev != nullptr) {
+        // Left child of his parent.
+        if (node->key < node->prev->key) {
+            if (node->prev->bal == 1) {
+                node->prev->bal = 0;
+            }
+            else if (node->prev->bal == 0) {
+                node->prev->bal = -1;
+                upin(node->prev);
+            }
+            else {
+                if (node->bal == -1) {
+                    if (node->prev->key < node->prev->prev->key) {
+                        node->prev->prev->left = rotateLeft(node->prev);
+                        node->bal = 0;
+                        node->right->bal = 0;
+                    }
+                    else {
+                        node->prev->prev->right = rotateLeft(node->prev);
+                        node->bal = 0;
+                        node->right->bal = 0;
+                    }
+                }
+                else if (node->bal == 1) {
 
+                }
+            }
+        }
+        // Right child of his parent.
+        else {
+
+        }
+    }
 }
 
 /********************************************************************
