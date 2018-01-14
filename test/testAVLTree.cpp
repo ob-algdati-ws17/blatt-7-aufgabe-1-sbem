@@ -9,7 +9,7 @@ using namespace std;
 
 // empty tree
 
-TEST(AVLTreeTest, Empty_Tree) {
+/*TEST(AVLTreeTest, Empty_Tree) {
     AVLTree t;
     EXPECT_EQ(nullptr, t.preorder());
     EXPECT_EQ(nullptr, t.inorder());
@@ -88,14 +88,38 @@ TEST(AVLTreeTest, Three_Nodes_Rotate_LeftRight) {
     EXPECT_THAT(*t.inorder(), testing::ElementsAre(41, 42, 43));
     EXPECT_THAT(*t.preorder(), testing::ElementsAre(42, 41, 43));
     EXPECT_THAT(*t.postorder(), testing::ElementsAre(41, 43, 42));
+}*/
+
+
+// remove
+
+// insert nothing and remove from empty tree
+TEST(AVLTreeTest, Remove_EmptyTree) {
+    AVLTree t;
+    t.remove(43);
+    EXPECT_EQ(nullptr, t.preorder());
+    EXPECT_EQ(nullptr, t.inorder());
+    EXPECT_EQ(nullptr, t.postorder());
 }
 
+// insert one node and remove this one node
+TEST(AVLTreeTest, Remove_RootWithoutChilds) {
+    AVLTree t;
+    t.insert(43);
+    t.remove(43);
+    EXPECT_EQ(nullptr, t.preorder());
+    EXPECT_EQ(nullptr, t.inorder());
+    EXPECT_EQ(nullptr, t.postorder());
+}
 
-//// empty test case ready to receive some code
-//// We have to rewrite it!!!!!!!!!!!!!!!!!!!!!
-//TEST(AVLTreeTest, Name) {
-//    AVLTree b;
-//    EXPECT_EQ(nullptr, b.preorder());
-//    EXPECT_EQ(nullptr, b.inorder());
-//    EXPECT_EQ(nullptr, b.postorder());
-//}
+// insert two nodes and remove one node
+TEST(AVLTreeTest, Remove_RootWithChilds) {
+    AVLTree t;
+    t.insert(42);
+    t.insert(41);
+    t.insert(43);
+    t.remove(42);
+    EXPECT_THAT(*t.inorder(), testing::ElementsAre(41, 43));
+    EXPECT_THAT(*t.preorder(), testing::ElementsAre(41, 43));
+    EXPECT_THAT(*t.postorder(), testing::ElementsAre(43, 41));
+}
