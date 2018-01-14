@@ -12,15 +12,13 @@ addons:
       - doxygen-gui
       - graphviz
 
-before_script:
+script:
     - rm -rf build
     - mkdir build
     - cd build
-
-script:
-    - cmake ..
-    - make
-    - make test
+    - pwd && cmake ..
+    - pwd && make
+    - pwd && make test
 
 after_success:
   - cd $TRAVIS_BUILD_DIR
