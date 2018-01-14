@@ -282,10 +282,10 @@ void AVLTree::remove(const int key) {
                 }
                 else {
                     auto symPredKey = findSymPred(p)->key;
+                    remove(symPredKey);
                     root = new Node(symPredKey);
                     root->left = p->left;
                     root->right = p->right;
-                    remove(symPredKey);
                 }
                 root->prev = nullptr;
             }
