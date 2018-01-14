@@ -309,8 +309,17 @@ AVLTree::Node *AVLTree::rotateLeft(Node *n) {
     newRoot->left = oldRoot;
     newRoot->prev = oldRoot->prev;
     oldRoot->prev = newRoot;
-
     // Balance Adjustments
+    // This case happens just with remove
+    if (newRoot->bal == 0) {
+        newRoot->bal = -1;
+        newRoot->left->bal = 1;
+    }
+    // This case happens with insert or remove
+    else {
+        newRoot->bal = 0;
+        newRoot->left->bal = 0;
+    }
 
     return newRoot;
 }
@@ -325,22 +334,48 @@ AVLTree::Node *AVLTree::rotateRight(Node *n) {
     newRoot->right = oldRoot;
     newRoot->prev = oldRoot->prev;
     oldRoot->prev = newRoot;
-
     // Balance Adjustments
-
+    newRoot->bal = 0;
+    newRoot->right->bal = 0;
     return newRoot;
 }
 
 AVLTree::Node *AVLTree::rotateLeftRight(Node *n) {
+    signed char balY = n->left->right->bal;
     n->left = rotateLeft(n->left);
     n->left->prev = n;
-    return rotateRight(n);
+    auto tmp = rotateRight(n);
+    if (balY == 1) {
+        tmp->left->bal = -1;
+        tmp->right->bal = 0;
+    }
+    else {
+        tmp->left->bal = 0;
+        tmp->right->bal = 1;
+    }
+    tmp->bal = 0;
+    return tmp;
 }
 
 AVLTree::Node *AVLTree::rotateRightLeft(Node *n) {
+    signed char balY = n->right->left->bal;
     n->right = rotateRight(n->right);
     n->right->prev = n;
-    return rotateLeft(n);
+    auto tmp = rotateLeft(n);
+    if (balY == -1) {
+        tmp->left->bal = 0;
+        tmp->right->bal = 1;
+    }
+    else if (balY == 0) {
+        tmp->left->bal = 0;
+        tmp->right->bal = 0;
+    }
+    else {
+        tmp->left->bal = -1;
+        tmp->right->bal = 0;
+    }
+    tmp->bal = 0;
+    return tmp;
 }
 
 
@@ -364,12 +399,8 @@ void AVLTree::upin(Node *node) {
                         root = rotateRight(node->prev);
                     } else if (node->prev->key < node->prev->prev->key) {
                         node->prev->prev->left = rotateRight(node->prev);
-//                        node->bal = 0;
-//                        node->right->bal = 0;
                     } else {
                         node->prev->prev->right = rotateRight(node->prev);
-//                        node->bal = 0;
-//                        node->right->bal = 0;
                     }
                 } else if (node->bal == 1) {
                     if (node->prev->prev == nullptr) {
@@ -395,12 +426,8 @@ void AVLTree::upin(Node *node) {
                         root = rotateLeft(node->prev);
                     } else if (node->prev->key < node->prev->prev->key) {
                         node->prev->prev->left = rotateLeft(node->prev);
-//                        node->bal = 0;
-//                        node->right->bal = 0;
                     } else {
                         node->prev->prev->right = rotateLeft(node->prev);
-//                        node->bal = 0;
-//                        node->right->bal = 0;
                     }
                 } else if (node->bal == -1) {
                     if (node->prev->prev == nullptr) {
