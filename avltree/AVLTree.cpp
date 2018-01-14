@@ -309,6 +309,9 @@ AVLTree::Node *AVLTree::rotateLeft(Node *n) {
     newRoot->left = oldRoot;
     newRoot->prev = oldRoot->prev;
     oldRoot->prev = newRoot;
+
+    // Balance Adjustments
+
     return newRoot;
 }
 
@@ -322,6 +325,9 @@ AVLTree::Node *AVLTree::rotateRight(Node *n) {
     newRoot->right = oldRoot;
     newRoot->prev = oldRoot->prev;
     oldRoot->prev = newRoot;
+
+    // Balance Adjustments
+
     return newRoot;
 }
 
@@ -414,12 +420,15 @@ void AVLTree::upout(Node *node) {
     if(node->bal == '0') {
         // p is left child of father pp
         if(node->key < node->prev->key) {
+            // case 1.1
             if(node->prev->bal == '-1') {
                 node->prev->bal = 0;
             }
+            // case 1.2
             else if(node->prev->bal == '0') {
                 node->prev->bal = 1;
             }
+            // case 1.3
             else {
                 // case 1.3.1
                 if(node->prev->right->bal == '0') {
