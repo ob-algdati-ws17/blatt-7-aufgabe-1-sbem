@@ -128,7 +128,7 @@ void AVLTree::remove(const int key) {
                     // case 1.3.l
                     else {
                         // case 1.3.l.a
-                        if(p->prev->right->bal == '0') {
+                        if(p->prev->right->bal == 0) {
                             // pp is left child
                             if(p->prev->key < p->prev->prev->key) {
                                 p->prev->prev->left = rotateLeft(p->prev);
@@ -139,7 +139,7 @@ void AVLTree::remove(const int key) {
                             }
                         }
                         // case 1.3.l.b
-                        else if(p->prev->right->bal == '1') {
+                        else if(p->prev->right->bal == 1) {
                             // pp is left child
                             if(p->prev->key < p->prev->prev->key) {
                                 p->prev->prev->left = rotateLeft(p->prev);
@@ -168,6 +168,8 @@ void AVLTree::remove(const int key) {
                     // replace p with a leaf (nullptr) and
                     // delete p
                     p->prev->left = nullptr;
+                    p->left = nullptr;
+                    p->right = nullptr;
                     delete p;
                 }
                     // p is right successor of pp
@@ -180,12 +182,12 @@ void AVLTree::remove(const int key) {
                     }
                     // case 1.2.r -> height of q is 1
                     else if(p->prev->left->left == nullptr && p->prev->left->right == nullptr) {
-                        p->prev->bal = 1;
+                        p->prev->bal = -1;
                     }
                     // case 1.3.r
                     else {
                         // case 1.3.r.a
-                        if(p->prev->left->bal == '0') {
+                        if(p->prev->left->bal == 0) {
                             // pp is left child
                             if(p->prev->key < p->prev->prev->key) {
                                 p->prev->prev->left = rotateRight(p->prev);
@@ -196,7 +198,7 @@ void AVLTree::remove(const int key) {
                             }
                         }
                         // case 1.3.r.b
-                        else if(p->prev->left->bal == '1') {
+                        else if(p->prev->left->bal == -1) {
                             // pp is left child
                             if(p->prev->key < p->prev->prev->key) {
                                 p->prev->prev->left = rotateRight(p->prev);
@@ -225,6 +227,8 @@ void AVLTree::remove(const int key) {
                     // replace p with a leaf (nullptr) and
                     // delete p
                     p->prev->right = nullptr;
+                    p->left = nullptr;
+                    p->right = nullptr;
                     delete p;
                 }
             }
@@ -253,17 +257,18 @@ void AVLTree::remove(const int key) {
             }
             // case 3
             else {
-                auto symPred = findSymPred(p);
+                auto symPredKey = findSymPred(p)->key;
+                remove(symPredKey);
                 // p is left child of pp
                 if(p->key < p->prev->key) {
-                    p->prev->left = new Node(symPred->key);
+                    p->prev->left = new Node(symPredKey);
+                    p->prev->left->right = p->right;
                 }
                 // p is right child of pp
                 else {
-                    p->prev->right = new Node(symPred->key);
+                    p->prev->right = new Node(symPredKey);
+                    p->prev->right->right = p->right;
                 }
-                // delets the symmetric predecessor of p
-                remove(symPred->key);
             }
         }
         // if p is the root of the whole avl tree
@@ -289,6 +294,8 @@ void AVLTree::remove(const int key) {
                 }
                 root->prev = nullptr;
             }
+            p->left = nullptr;
+            p->right = nullptr;
             delete p;
         }
     }
@@ -443,98 +450,100 @@ void AVLTree::upin(Node *node) {
 }
 
 void AVLTree::upout(Node *node) {
-    if(node->bal == '0') {
-        // p is left child of father pp
-        if(node->key < node->prev->key) {
-            // case 1.1
-            if(node->prev->bal == '-1') {
-                node->prev->bal = 0;
-            }
-            // case 1.2
-            else if(node->prev->bal == '0') {
-                node->prev->bal = 1;
-            }
-            // case 1.3
-            else {
-                // case 1.3.1
-                if(node->prev->right->bal == '0') {
-                    if(node->prev->key < node->prev->prev->key) {
-                        // we have to link the left pointer of the father
-                        // of the father to the return of rotate method
-                        node->prev->prev->left = rotateLeft(node->prev);
-                    }
-                    else {
-                        // we have to link the right pointer of the father
-                        // of the father to the return of rotate method
-                        node->prev->prev->right = rotateLeft(node->prev);
-                    }
+    if(node->bal == 0) {
+        if(node->prev != nullptr) {
+            // p is left child of father pp
+            if(node->key < node->prev->key) {
+                // case 1.1
+                if(node->prev->bal == -1) {
+                    node->prev->bal = 0;
                 }
-                // case 1.3.2
-                else if(node->prev->right->bal == '1') {
-                    if(node->prev->key < node->prev->prev->key) {
-                        node->prev->prev->left = rotateLeft(node->prev);
-                        upout(node->prev->prev->left);
-                    }
-                    else {
-                        node->prev->prev->right = rotateLeft(node->prev);
-                        upout(node->prev->prev->right);
-                    }
+                    // case 1.2
+                else if(node->prev->bal == 0) {
+                    node->prev->bal = 1;
                 }
-                // case 1.3.3
+                    // case 1.3
                 else {
-                    if(node->prev->key < node->prev->prev->key) {
-                        node->prev->prev->left = rotateRightLeft(node->prev);
-                        upout(node->prev->prev->left);
+                    // case 1.3.1
+                    if(node->prev->right->bal == 0) {
+                        if(node->prev->key < node->prev->prev->key) {
+                            // we have to link the left pointer of the father
+                            // of the father to the return of rotate method
+                            node->prev->prev->left = rotateLeft(node->prev);
+                        }
+                        else {
+                            // we have to link the right pointer of the father
+                            // of the father to the return of rotate method
+                            node->prev->prev->right = rotateLeft(node->prev);
+                        }
                     }
+                        // case 1.3.2
+                    else if(node->prev->right->bal == 1) {
+                        if(node->prev->key < node->prev->prev->key) {
+                            node->prev->prev->left = rotateLeft(node->prev);
+                            upout(node->prev->prev->left);
+                        }
+                        else {
+                            node->prev->prev->right = rotateLeft(node->prev);
+                            upout(node->prev->prev->right);
+                        }
+                    }
+                        // case 1.3.3
                     else {
-                        node->prev->prev->right = rotateRightLeft(node->prev);
-                        upout(node->prev->prev->right);
+                        if(node->prev->key < node->prev->prev->key) {
+                            node->prev->prev->left = rotateRightLeft(node->prev);
+                            upout(node->prev->prev->left);
+                        }
+                        else {
+                            node->prev->prev->right = rotateRightLeft(node->prev);
+                            upout(node->prev->prev->right);
+                        }
                     }
                 }
             }
-        }
-        // p is right child of father pp
-        else {
-            if(node->prev->bal == '-1') {
-                node->prev->bal = 0;
-            }
-            else if(node->prev->bal == '0') {
-                node->prev->bal = 1;
-            }
+                // p is right child of father pp
             else {
-                // case 2.3.1
-                if(node->prev->left->bal == '0') {
-                    if(node->prev->key < node->prev->prev->key) {
-                        // we have to link the left pointer of the father
-                        // of the father to the return of rotate method
-                        node->prev->prev->left = rotateRight(node->prev);
-                    }
-                    else {
-                        // we have to link the right pointer of the father
-                        // of the father to the return of rotate method
-                        node->prev->prev->right = rotateRight(node->prev);
-                    }
+                if(node->prev->bal == -1) {
+                    node->prev->bal = 0;
                 }
-                    // case 2.3.2
-                else if(node->prev->left->bal == '1') {
-                    if(node->prev->key < node->prev->prev->key) {
-                        node->prev->prev->left = rotateRight(node->prev);
-                        upout(node->prev->prev->left);
-                    }
-                    else {
-                        node->prev->prev->right = rotateRight(node->prev);
-                        upout(node->prev->prev->right);
-                    }
+                else if(node->prev->bal == 0) {
+                    node->prev->bal = 1;
                 }
-                    // case 2.3.3
                 else {
-                    if(node->prev->key < node->prev->prev->key) {
-                        node->prev->prev->left = rotateLeftRight(node->prev);
-                        upout(node->prev->prev->left);
+                    // case 2.3.1
+                    if(node->prev->left->bal == 0) {
+                        if(node->prev->key < node->prev->prev->key) {
+                            // we have to link the left pointer of the father
+                            // of the father to the return of rotate method
+                            node->prev->prev->left = rotateRight(node->prev);
+                        }
+                        else {
+                            // we have to link the right pointer of the father
+                            // of the father to the return of rotate method
+                            node->prev->prev->right = rotateRight(node->prev);
+                        }
                     }
+                        // case 2.3.2
+                    else if(node->prev->left->bal == 1) {
+                        if(node->prev->key < node->prev->prev->key) {
+                            node->prev->prev->left = rotateRight(node->prev);
+                            upout(node->prev->prev->left);
+                        }
+                        else {
+                            node->prev->prev->right = rotateRight(node->prev);
+                            upout(node->prev->prev->right);
+                        }
+                    }
+                        // case 2.3.3
                     else {
-                        node->prev->prev->right = rotateLeftRight(node->prev);
-                        upout(node->prev->prev->right);
+                        if(node->prev->key < node->prev->prev->key) {
+                            node->prev->prev->left = rotateLeftRight(node->prev);
+                            upout(node->prev->prev->left);
+                        }
+                        else {
+                            node->prev->prev->right = rotateLeftRight(node->prev);
+                            upout(node->prev->prev->right);
+                        }
                     }
                 }
             }
