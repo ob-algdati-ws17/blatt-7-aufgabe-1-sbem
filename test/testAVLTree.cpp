@@ -33,7 +33,7 @@ TEST(AVLTreeTest, Two_Nodes) {
     t.insert(43);
 //    EXPECT_TRUE(tree.search(42));
 //    EXPECT_TRUE(tree.search(43));
-    EXPECT_THAT(*t.inorder(), testing::ElementsAre(43, 42));
+    EXPECT_THAT(*t.inorder(), testing::ElementsAre(42, 43));
     EXPECT_THAT(*t.preorder(), testing::ElementsAre(42, 43));
     EXPECT_THAT(*t.postorder(), testing::ElementsAre(43, 42));
 }

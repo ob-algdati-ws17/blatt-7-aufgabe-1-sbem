@@ -85,22 +85,22 @@ void AVLTree::insert(int value, Node *node) {
             if (node->left == nullptr) {
                 node->left = new Node(value, node);
                 node->bal -= 1;
-                if (node->bal =! 0) {
+                if (node->bal != 0) {
                     upin(node);
                 }
             }
             else {
-                insert(value, node);
+                insert(value, node->left);
             }
         } else {
-            if (node->left == nullptr) {
-                node->left = new Node(value, node);
+            if (node->right == nullptr) {
+                node->right = new Node(value, node);
                 node->bal += 1;
-                if (node->bal =! 0) {
+                if (node->bal != 0) {
                     upin(node);
                 }
             } else {
-                insert(value, node);
+                insert(value, node->right);
             }
         }
     }
