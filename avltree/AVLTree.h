@@ -1,5 +1,18 @@
 /**
+ * @file AVLTree.h
  * @authors Ehsan Moslehi, Sebastian Bauman
+ * @version 1.1
+ * @brief This header file contains all required
+ * definitions and basic utilities to
+ * creat and manage self balancing trees (AVL-Tree).
+ *
+ * This Library contains all required
+ * definitions and basic utilities to
+ * creat and manage self balancing trees (AVL-Tree).
+ * Use folowing methods  to manage AVL-Tree
+ * insert to add nodes to the tree
+ * remove to remove nodes from the tree
+ * search to search a node
  */
 
 /* TODO: upin(), upout(), remove(), googletests,
@@ -15,6 +28,9 @@
 
 using namespace std;
 
+/**
+ * The AVLTree class represents the self balancing tree (AVL-Tree)
+ */
 class AVLTree {
 
 private:
@@ -221,10 +237,21 @@ private:
 
 
 public:
-
+    /**
+     * Default destructor of AVLTree.
+     */
     ~AVLTree();
 
-    // Funktioniert exakt, wie in natuerlichem Baum -> Siehe BinTree
+    /**
+     * \brief Searching fo a node with specified value.
+     *
+     * This method searches for a node with a specified key.
+     * returns the node with the value if it is found
+     * or nullprt if not found.
+     *
+     * @param Key the value to be searched for.
+     * @return Node the node with value as key if exists or nullptr otherwise.
+     */
     Node *search(const int);
 
     /*
@@ -248,6 +275,15 @@ public:
      * Wenn sich bal von p geaendert hat, haben sich eventuell auch andere bal auf dem Pfad von p zur Wurzel
      * geaendert. Daher muss upin(p) aufgerufen werden, das von p auf Pfad bis zur Wurzel laeuft und bal
      * anpasst.
+     */
+    /**
+     * \brief Adding a node with specified value to the tree.
+     *
+     * This method adds a node with the given value to the tree,
+     * if there is no other node with the same key and balances
+     * the tree if required.
+     *
+     * @param Key the key of the node to be added to the tree.
      */
     void insert(const int);
     /*
@@ -311,6 +347,14 @@ public:
      *
      *
      *
+     */
+    /**
+     * \brief Removing the node with specified key, if exists.
+     *
+     * This method removes a node with the given value as key,
+     * if there is a node with the same value.
+     *
+     * @param Key the key of the node to be removed from the tree.
      */
     void remove(const int);
 
